@@ -135,6 +135,16 @@ if [[ $ASIC_MODEL =~ "Antminer" ]]; then
 	ps w | grep avahi | grep -v grep | awk '{print $1}' | xargs kill -9 > /dev/null 2>&1 #/etc/init.d/avahi stop - does not work on some models
 fi
 
+
+if [[ $ASIC_MODEL =~ "WhatsMiner M10" ]]; then
+    echo2 "> Applying crontab"
+    #[[ ! -d /var/spool/cron/crontabs ]] && ln -s /tmp  /var/spool/cron/crontabs
+    crontab /hive/share/whatsminer/crontab.root
+    [[ `ps aux | grep "crond" | grep -v grep | wc -l` = 0 ]] &&
+            /usr/sbin/crond
+fi
+
+
 echo2 "> Caching host resolve"
 cache-hive-ip
 
